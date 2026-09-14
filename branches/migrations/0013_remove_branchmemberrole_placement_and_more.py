@@ -48,7 +48,7 @@ def transfer_data(apps, schema_editor):
             role.constituency = role.constituency_fsl
         else:
             role.constituency = role.constituency_class
-        role.name = f"! {role.branch}: {role.name}"
+        role.name = f"[! {role.branch}] {role.name}"
         role.save()
 
 

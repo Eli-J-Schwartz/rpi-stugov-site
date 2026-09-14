@@ -21,6 +21,8 @@ from collections import defaultdict
 
 from datetime import date
 
+import re
+
 from django import forms
 from django.db import models
 
@@ -128,6 +130,9 @@ class Role(index.Indexed, ClusterableModel):
 
     def __str__(self):
         return self.name
+
+    def get_display_name(self):
+        return re.sub(r'\[[^\]]*\]\s*', '', self.name)
 
 
 # ===========================================================================
@@ -352,7 +357,7 @@ class MembershipDisplay:
         
         for config in configs:
             tier = config.hierarchy_tier
-            role_name = config.role_display or config.role.name
+            role_name = config.role_display or config.role.get_display_name()
             role_to_tier[config.role_id].append((tier, role_name))
             configured_roles[config.role_id] = config.role
             
