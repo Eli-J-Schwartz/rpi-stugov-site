@@ -6,6 +6,8 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+import rep_finder
+from rep_finder import views
 from search import views as search_views
 
 urlpatterns = [
@@ -46,4 +48,8 @@ urlpatterns = urlpatterns + [
     # Alternatively, if you want Wagtail pages to be served from a subpath
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
+]
+
+urlpatterns += [
+    path('rep_finder', rep_finder.views.get_name, name="rep_finder")
 ]
