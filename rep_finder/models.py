@@ -88,7 +88,8 @@ class RepsForm(forms.Form):
         
         member_profile_list = []
         for role_assignment in role_assignments_list:
-            member_profile_list += [role_assignment.member]
+            if role_assignment.member not in member_profile_list:
+                member_profile_list += [role_assignment.member]
         
         return [
             {
@@ -108,7 +109,8 @@ class RepsForm(forms.Form):
         
         member_profile_list = []
         for role_assignment in role_assignments_list:
-            member_profile_list += [role_assignment.member]
+            if role_assignment.member not in member_profile_list:
+                member_profile_list += [role_assignment.member]
         
         return [
             {

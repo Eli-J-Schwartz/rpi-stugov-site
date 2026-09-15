@@ -7,7 +7,6 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
 import rep_finder
-from rep_finder import views
 from search import views as search_views
 
 urlpatterns = [
