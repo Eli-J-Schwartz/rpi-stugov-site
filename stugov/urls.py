@@ -49,7 +49,3 @@ urlpatterns = urlpatterns + [
     # of your site, rather than the site root:
     #    path("pages/", include(wagtail_urls)),
 ]
-
-urlpatterns += [
-    path('rep_finder', rep_finder.views.get_name, name="rep_finder")
-]
