@@ -1,28 +1,7 @@
 """
-Models for the Forms & Submissions app.
+Models for the Representative Finder App
 
-This app extends Wagtail's built-in form builder (wagtail.contrib.forms)
-to create the Complaint Form and any future submission forms.
-
-Key design decisions:
-  - AbstractEmailForm (not AbstractForm) is used because submissions should
-    be both stored in the database AND emailed to student government officers.
-    AbstractForm only stores; AbstractEmailForm adds email notification.
-  - FormField uses AbstractFormField which gives editors the power to
-    add/remove/reorder form fields entirely through the Wagtail admin.
-    No code changes needed to add a "Category" dropdown or rename a field.
-  - The privacy_notice field lets admins display anonymity/privacy information
-    near the form, which is important for a complaint submission system.
-
-How Wagtail's form builder works:
-  1. Admin creates a ComplaintFormPage in the page tree
-  2. Admin adds FormField entries (name, email, textarea, dropdown, etc.)
-     via InlinePanel — each FormField becomes one HTML input
-  3. When a user submits the form, Wagtail:
-     a) Validates the input
-     b) Stores the submission in the database (viewable in Wagtail admin)
-     c) Sends an email notification (if configured)
-     d) Renders the thank_you_text as a landing page
+This app utilizes Django's built-in form functionality to respond to requests with the correct representatives for someones class year.
 """
 
 from django.conf import settings
@@ -40,32 +19,6 @@ from django.db.models import Q
 from wagtail.admin.panels import FieldPanel
 
 
-
-
-# class RepsFormField(AbstractFormField):
-#     """
-#     A single field in a form (e.g., "Your Name", "Description of Complaint").
-
-#     AbstractFormField provides:
-#       - label: the field's visible label
-#       - field_type: dropdown of HTML input types (text, email, textarea,
-#         dropdown, checkboxes, radio buttons, date, URL, number, etc.)
-#       - required: whether the field must be filled in
-#       - choices: comma-separated options for dropdowns/checkboxes/radios
-#       - default_value: pre-filled value
-#       - help_text: hint text below the field
-
-#     The ParentalKey links this to a specific RepsFormPage, so each
-#     form page has its own independent set of fields.
-#     """
-
-#     page = ParentalKey(
-#         "rep_finder.RepsFormPage",
-#         on_delete=models.CASCADE,
-#         related_name="form_fields",
-#     )
-
-#     help_text = RichTextField(blank=True)
 
 class RepsForm(forms.Form):
     your_class = forms.ChoiceField(label="Choose Your Class Year", choices=class_choices(), widget=forms.Select(attrs={"class":"my-class"}))

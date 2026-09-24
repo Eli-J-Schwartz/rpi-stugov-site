@@ -1,12 +1,13 @@
 {# ================================================================== #}
 {# REPRESENTATIVE FORM LANDING PAGE — Shown after successful submission #}
 {#                                                                     #}
-{# Wagtail's AbstractEmailForm renders this template automatically    #}
-{# after a form is successfully submitted. The template name must     #}
-{# follow the pattern: {app}/{model}_landing.html                     #}
+{# Input arguments are:                                               #}
+{#   - form: a Django form object with fields from the admin          #}
+{#   - page: the RepsFormPage instance                                #}
 {#                                                                     #}
-{# The page variable is still the RepsFormPage instance, so we        #}
-{# can access thank_you_text and other fields.                        #}
+{# The list of students is automatically filled in based on what class #}
+{# year and fsl status the user submitted the first time. Representatives #}
+{# are fetched from the form.get_class_representatives() function.    #}
 {# ================================================================== #}
 
 {% extends "base.html" %}

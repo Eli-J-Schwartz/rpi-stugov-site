@@ -1,17 +1,13 @@
 {# ================================================================== #}
 {# REPRESENTATIVE FORM PAGE — Renders the dynamic form                #}
 {#                                                                     #}
-{# Wagtail's AbstractEmailForm automatically provides:                 #}
+{# Input arguments are:                                               #}
 {#   - form: a Django form object with fields from the admin          #}
 {#   - page: the RepsFormPage instance                                #}
 {#                                                                     #}
-{# The form fields are dynamically generated based on what the admin  #}
-{# configured in the Wagtail admin. Each FormField entry becomes a    #}
-{# Django form field with validation.                                 #}
-{#                                                                     #}
-{# On POST, Wagtail handles validation, stores the submission,        #}
-{# sends the email notification, and renders the landing page         #}
-{# (reps_form_page_landing.html) with thank_you_text.                 #}
+{# The form fields are dynamically generated based on the built-in form #}
+{# functionality. This includes spots for class year and fsl status, #}
+{# and can be configured in the models.py file.                       #}
 {# ================================================================== #}
 
 {% extends "base.html" %}
