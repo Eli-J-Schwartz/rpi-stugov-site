@@ -91,7 +91,7 @@ class Command(BaseCommand):
         senate_committee_page = CommitteeIndexPage(
             title="Senate Committeee List",
             slug="senate_committee_list",
-            intro="The committee of the Senate.",
+            intro="The committees of the Senate.",
             show_in_menus=True
         )
 
@@ -540,6 +540,11 @@ class Command(BaseCommand):
             }
         )
         new_person = self.make_person(class_choices()[0][0])
+        MemberProfile.objects.filter(email=new_person.email).update(
+            first_name = "Ben",
+            last_name = "Bitdiddle",
+            email = "bitdib@rpi.edu"   
+        )
         MemberRoleAssignment.objects.create(
             member=new_person,
             role=role
@@ -673,7 +678,7 @@ class Command(BaseCommand):
                 committee_role="Vice Chair"
             )
 
-            for i in range(6):
+            for i in range(5):
                 random_senator = random.choice(senators_list)
     
                 CommitteeMemberPlacement.objects.create(
@@ -681,9 +686,200 @@ class Command(BaseCommand):
                     member=random_senator,
                     committee_role="Member"
                 )
-            
 
-    emails = []
+        eboard_branch_page = BranchPage(
+            branch_type="eboard",
+            tagline="The E-Board branch of student government.",
+            image=None,
+            image_credit="",
+            image_credit_url="",
+            body=[],
+            contact_email="pu@rpi.edu",
+            meeting_schedule="",
+            title="E-Board",
+            slug="eboard",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=eboard_branch_page)
+
+        eboard_member_page = MemberListingPage(
+            title="E-Board Member List",
+            slug="eboard_member_list",
+            intro="The members of the E-Board.",
+            show_in_menus=True
+        )
+
+        eboard_branch_page.add_child(instance=eboard_member_page)
+
+        for officer_role in ["Secretary", "Treasurer", "Parlimenatarian"]:
+            name = f"[E-Board] {officer_role}"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=officer_role,
+                hierarchy_tier=1,
+                page=eboard_member_page
+            )
+            if created: print(f"Created {name}")
+
+        name = f"President of the Union"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 1,
+                "constituency": 'none',
+            }
+        )
+        new_person = self.make_person(class_choices()[0][0])
+        MemberProfile.objects.filter(email=new_person.email).update(
+            first_name = "Alyssa P.",
+            last_name = "Hacker",
+            email = "hackea@rpi.edu"   
+        )
+        MemberRoleAssignment.objects.create(
+            member=new_person,
+            role=role
+        )
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="President of the Union",
+            hierarchy_tier=0,
+            page=eboard_member_page
+        )
+        if created: print(f"Created {name}")
+
+        for vp in ["Board Operations", "Club Relations", "Rules and Special Projects"]:
+            name = f"Vice President for {vp}"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=name,
+                hierarchy_tier=1,
+                page=eboard_member_page
+            )
+            if created: print(f"Created {name}")
+
+        name = f"Club & Organization Representative"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 6,
+                "constituency": 'none',
+            }
+        )
+        for i in range(6):
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display=name,
+            hierarchy_tier=3,
+            page=eboard_member_page
+        )
+        if created: print(f"Created {name}")
+
+        name = f"Member-At-Large Representative"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 4,
+                "constituency": 'none',
+            }
+        )
+        for i in range(4):
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display=name,
+            hierarchy_tier=3,
+            page=eboard_member_page
+        )
+        if created: print(f"Created {name}")
+
+        for class_num, _ in class_choices():
+            if class_num == "graduate": continue
+            name = f"[E-Board] Class of {class_num} Representative"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_num)
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=f"Class of {class_num} Representative",
+                hierarchy_tier=3,
+                page=eboard_member_page
+            )
+            if created: print(f"Created {name}")
+
+
+        eboard_committee_page = CommitteeIndexPage(
+            title="E-Board Committeee List",
+            slug="eboard_committee_list",
+            intro="The committees of E-Board.",
+            show_in_menus=True
+        )
+
+        eboard_branch_page.add_child(instance=eboard_committee_page)
+            
+        for i in range(9):
+            committee_name = self.gen_committee()
+
+            committee_page = CommitteePage(
+                title=committee_name,
+                slug='_'.join(i.lower() for i in committee_name.split(" ")),
+                show_in_menus=False,
+                description=''.join([random.choice(string.ascii_lowercase+"                            .") for _ in range(1000)]),
+                meeting_time=random.choice(["Monday", "Tuesday", "Wednesday", "Thursday"])+" "+str(random.choice([12,1,2,3,4,5,6]))+"pm",
+                meeting_location=f"Union Room {''.join([str(random.choice(range(10))) for _ in range(4)])}"
+            )
+            
+            eboard_committee_page.add_child(instance=committee_page)
+
+    emails = ["bitdib@rpi.edu", "hackea@rpi.edu"]
     def make_email(self):
         while True:
             email = ''.join([random.choice(string.ascii_lowercase) for _ in range(6)]) + str(random.randint(2,20)) + "@rpi.edu"
