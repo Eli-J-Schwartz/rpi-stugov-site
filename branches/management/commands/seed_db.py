@@ -32,7 +32,11 @@ db_classes = [
     ClassCouncilIndexPage,
     ClassCouncilRoleConfig,
     MemberListingPage,
-    BranchRoleConfig
+    BranchRoleConfig,
+    CommitteePage,
+    CommitteeIndexPage,
+    CommitteeMemberPlacement,
+    CommitteeRoleConfig
 ]
 
 from django.core.management.base import BaseCommand, CommandError
@@ -53,7 +57,45 @@ class Command(BaseCommand):
                 print(f"deleted all {db_class}")
                 db_class.objects.all().delete()
 
+        random.seed(12180)
+
+        senators_list = []
+
         root_page = Page.objects.get(title="Home").specific
+
+        senate_branch_page = BranchPage(
+            branch_type="senate",
+            tagline="The senate branch of student government.",
+            image=None,
+            image_credit="",
+            image_credit_url="",
+            body=[],
+            contact_email="gm@rpi.edu",
+            meeting_schedule="",
+            title="Senate",
+            slug="senate",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=senate_branch_page)
+
+        senate_member_page = MemberListingPage(
+            title="Senate Member List",
+            slug="senate_member_list",
+            intro="The members of the Senate.",
+            show_in_menus=True
+        )
+        
+        senate_branch_page.add_child(instance=senate_member_page)
+
+        senate_committee_page = CommitteeIndexPage(
+            title="Senate Committeee List",
+            slug="senate_committee_list",
+            intro="The committee of the Senate.",
+            show_in_menus=True
+        )
+
+        senate_branch_page.add_child(instance=senate_committee_page)
 
         uc_branch_page = BranchPage(
             branch_type="uc",
@@ -210,12 +252,19 @@ class Command(BaseCommand):
                     member=new_person,
                     role=role
                 )
+                senators_list.append(new_person)
                 
             ClassCouncilRoleConfig.objects.create(
                 role=role,
                 role_display="Class Senator",
                 hierarchy_tier=3,
                 page=class_council_page
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=f"Class of {class_num} Senator",
+                hierarchy_tier=3,
+                page=senate_member_page
             )
             
             name = f"Class of {class_num} Vice President"
@@ -370,12 +419,19 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
+            senators_list.append(new_person)
             
         BranchRoleConfig.objects.create(
             role=role,
             role_display="Graduate Senator",
             hierarchy_tier=3,
             page=gc_member_page
+        )
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display=f"Graduate Senator",
+            hierarchy_tier=3,
+            page=senate_member_page
         )
         
         name = f"Graduate Vice President"
@@ -451,8 +507,8 @@ class Command(BaseCommand):
             )
             if created: print(f"Created {name}")
 
-        for i in range(4):
-            name = f"[GC] {officer_role}"
+        for officer_role in ["Secretary", "Treasurer", "Parlimenatarian"]:
+            name = f"[Senate] {officer_role}"
             role, created = Role.objects.update_or_create(
                 name=name,
                 defaults={
@@ -461,7 +517,7 @@ class Command(BaseCommand):
                     "constituency": 'none',
                 }
             )
-            new_person = self.make_person('graduate')
+            new_person = self.make_person(class_choices()[0][0])
             MemberRoleAssignment.objects.create(
                 member=new_person,
                 role=role
@@ -470,9 +526,162 @@ class Command(BaseCommand):
                 role=role,
                 role_display=officer_role,
                 hierarchy_tier=1,
-                page=gc_member_page
+                page=senate_member_page
             )
             if created: print(f"Created {name}")
+
+        name = f"Grand Marshall"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 1,
+                "constituency": 'none',
+            }
+        )
+        new_person = self.make_person(class_choices()[0][0])
+        MemberRoleAssignment.objects.create(
+            member=new_person,
+            role=role
+        )
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="Grand Marshall",
+            hierarchy_tier=0,
+            page=senate_member_page
+        )
+        if created: print(f"Created {name}")
+
+        for vgm in ["Internal", "External"]:
+            name = f"Vice Grand Marshall for {vgm} Affairs"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=name,
+                hierarchy_tier=1,
+                page=senate_member_page
+            )
+            if created: print(f"Created {name}")
+
+        name = f"FSL Senator"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 3,
+                "constituency": 'associated',
+            }
+        )
+        for i in range(3):
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            senators_list.append(new_person)
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display=name,
+            hierarchy_tier=3,
+            page=senate_member_page
+        )
+        if created: print(f"Created {name}")
+
+        name = f"Independent Senator"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 3,
+                "constituency": 'independent',
+            }
+        )
+        for i in range(3):
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            senators_list.append(new_person)
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display=name,
+            hierarchy_tier=3,
+            page=senate_member_page
+        )
+        if created: print(f"Created {name}")
+
+        for i in range(9):
+            committee_name = self.gen_committee()
+            name = f"{committee_name} Chair"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=name,
+                hierarchy_tier=2,
+                page=senate_member_page
+            )
+            if created: print(f"Created {name}")
+
+            committee_page = CommitteePage(
+                title=committee_name,
+                slug='_'.join(i.lower() for i in committee_name.split(" ")),
+                show_in_menus=False,
+                description=''.join([random.choice(string.ascii_lowercase+"                            .") for _ in range(1000)]),
+                meeting_time=random.choice(["Monday", "Tuesday", "Wednesday", "Thursday"])+" "+str(random.choice([12,1,2,3,4,5,6]))+"pm",
+                meeting_location=f"Union Room {''.join([str(random.choice(range(10))) for _ in range(4)])}"
+            )
+            
+            senate_committee_page.add_child(instance=committee_page)
+
+            CommitteeRoleConfig.objects.create(
+                role=role,
+                role_display="Chair",
+                hierarchy_tier=0,
+                page=committee_page
+            )
+
+            random_senator = random.choice(senators_list)
+
+            CommitteeMemberPlacement.objects.create(
+                page=committee_page,
+                member=random_senator,
+                committee_role="Vice Chair"
+            )
+
+            for i in range(6):
+                random_senator = random.choice(senators_list)
+    
+                CommitteeMemberPlacement.objects.create(
+                    page=committee_page,
+                    member=random_senator,
+                    committee_role="Member"
+                )
+            
 
     emails = []
     def make_email(self):
@@ -496,108 +705,9 @@ class Command(BaseCommand):
             }
         )
         return person
-        
-        
-        # try:
-        #     with open(csv_path, newline="", encoding="utf-8-sig") as f:
-        #         rows = list(csv.DictReader(f))
-        # except FileNotFoundError:
-        #     raise CommandError(f"File not found: {csv_path}")
 
-        # if not rows:
-        #     raise CommandError("CSV file is empty (no data rows).")
-
-        # missing = REQUIRED_COLUMNS - set(rows[0].keys())
-        # if missing:
-        #     raise CommandError(
-        #         f"CSV is missing required columns: {', '.join(sorted(missing))}"
-        #     )
-
-        # if clear and not dry_run:
-        #     count = MemberProfile.objects.all().delete()[0]
-        #     self.stdout.write(
-        #         self.style.WARNING(f"Cleared {count} existing placements.")
-        #     )
-
-        # # -- Process rows --
-        # stats = {
-        #     "created": 0,
-        #     "updated": 0,
-        #     "errors": 0,
-        # }
-
-        # for i, row in enumerate(rows, start=2):  # start=2 because row 1 is header
-        #     row = {k: (v or "").strip() for k, v in row.items()}
-        #     first_name = row.get("first_name", "")
-        #     last_name = row.get("last_name", "")
-        #     rcs_id = row.get("rcs_id", "")
-
-        #     if not first_name or not last_name:
-        #         self.stderr.write(
-        #             self.style.ERROR(f"Row {i}: missing first or last name, skipping.")
-        #         )
-        #         stats["errors"] += 1
-        #         continue
-        #     if not rcs_id:
-        #         self.stderr.write(
-        #             self.style.ERROR(f"Row {i}: missing rcs_id, skipping.")
-        #         )
-        #         stats["errors"] += 1
-        #         continue
-
-        #     if dry_run:
-        #         if use_names:
-        #             exists = MemberProfile.objects.filter(
-        #                 first_name__iexact=first_name,
-        #                 last_name__iexact=last_name,
-        #             ).exists()
-        #             action = "update" if exists else "create"
-        #             self.stdout.write(
-        #                 f"Row {i}: would {action} profile '{first_name} {last_name}' "
-        #             )
-        #         else:
-        #             exists = MemberProfile.objects.filter(
-        #                 email__iexact=f"{rcs_id}@rpi.edu",
-        #             ).exists()
-        #             action = "update" if exists else "create"
-        #             self.stdout.write(
-        #                 f"Row {i}: would {action} profile '{rcs_id}' "
-        #             )
-        #         stats["created" if action == "create" else "updated"] += 1
-        #         continue
-
-        #     profile_defaults = {
-        #         "first_name": first_name,
-        #         "last_name": last_name,
-        #         "email": f"{rcs_id}@rpi.edu",
-        #     }
-        #     if row.get("class_year"):
-        #         profile_defaults["class_year"] = row["class_year"]
-        #     if row.get("major"):
-        #         profile_defaults["major"] = row["major"]
-        #     if row.get("bio"):
-        #         profile_defaults["bio"] = row["bio"]
-
-        #     if use_names:
-        #         _, created = MemberProfile.objects.update_or_create(
-        #             first_name__iexact=first_name,
-        #             last_name__iexact=last_name,
-        #             defaults=profile_defaults,
-        #         )
-        #     else:
-        #         _, created = MemberProfile.objects.update_or_create(
-        #             email__iexact=f"{rcs_id}@rpi.edu",
-        #             defaults=profile_defaults,
-        #         )
-        #     stats["created" if created else "updated"] += 1
-
-        # # -- Summary --
-        # prefix = "[DRY RUN] " if dry_run else ""
-        # self.stdout.write("")
-        # self.stdout.write(self.style.SUCCESS(f"{prefix}Member profile import complete:"))
-        # self.stdout.write(f"  Profiles created:   {stats['created']}")
-        # self.stdout.write(f"  Profiles updated:   {stats['updated']}")
-        # if stats["errors"]:
-        #     self.stdout.write(
-        #         self.style.ERROR(f"  Errors:             {stats['errors']}")
-        #     )
+    def gen_committee(self):
+        out = ""
+        for i in range(3):
+            out += ''.join([random.choice(string.ascii_lowercase) for _ in range([7,3,7][i])]).capitalize() +" "
+        return out + "Committee"
