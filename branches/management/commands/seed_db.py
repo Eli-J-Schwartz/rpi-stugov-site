@@ -218,7 +218,7 @@ class Command(BaseCommand):
                 page=class_council_page
             )
             
-            name = f"Class of {class_num} President"
+            name = f"Class of {class_num} Vice President"
             role, created = Role.objects.update_or_create(
                 name=name,
                 defaults={
@@ -249,7 +249,7 @@ class Command(BaseCommand):
                 page=uc_member_page
             )
             
-            name = f"Class of {class_num} Vice President"
+            name = f"Class of {class_num} President"
             role, created = Role.objects.update_or_create(
                 name=name,
                 defaults={
@@ -302,6 +302,177 @@ class Command(BaseCommand):
                     page=class_council_page
                 )
                 if created: print(f"Created {name}")
+
+        gc_branch_page = BranchPage(
+            branch_type="gc",
+            tagline="The graduate council branch of student government.",
+            image=None,
+            image_credit="",
+            image_credit_url="",
+            body=[],
+            contact_email="gc@rpi.edu",
+            meeting_schedule="",
+            title="Graduate Council",
+            slug="gc",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=gc_branch_page)
+
+        gc_member_page = MemberListingPage(
+            title="Graduate Council Member List",
+            slug="gc_member_list",
+            intro="The members of the Graduate Council.",
+            show_in_menus=True
+        )
+
+        gc_branch_page.add_child(instance=gc_member_page)
+                        
+        name = f"Graduate Representative"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 8,
+                "constituency": 'graduate',
+            }
+        )
+        if created: print(f"Created {name}")
+
+        for i in range(8):
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="Graduate Representative",
+            hierarchy_tier=3,
+            page=gc_member_page
+        )
+        
+        name = f"Graduate Senator"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 4,
+                "constituency": 'graduate',
+            }
+        )
+        if created: print(f"Created {name}")
+
+        for i in range(4):
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="Graduate Senator",
+            hierarchy_tier=3,
+            page=gc_member_page
+        )
+        
+        name = f"Graduate Vice President"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 1,
+                "constituency": 'none',
+            }
+        )
+        if created: print(f"Created {name}")
+
+        for i in range(1):
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="Graduate Vice President",
+            hierarchy_tier=1,
+            page=gc_member_page
+        )
+        
+        name = f"Graduate President"
+        role, created = Role.objects.update_or_create(
+            name=name,
+            defaults={
+                "name": name,
+                "positions": 1,
+                "constituency": 'none',
+            }
+        )
+        if created: print(f"Created {name}")
+
+        for i in range(1):
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+
+        BranchRoleConfig.objects.create(
+            role=role,
+            role_display="Graduate President",
+            hierarchy_tier=0,
+            page=gc_member_page
+        )
+
+        for officer_role in ["Secretary", "Treasurer", "Publicity Director"]:
+            name = f"[GC] {officer_role}"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=officer_role,
+                hierarchy_tier=1,
+                page=gc_member_page
+            )
+            if created: print(f"Created {name}")
+
+        for i in range(4):
+            name = f"[GC] {officer_role}"
+            role, created = Role.objects.update_or_create(
+                name=name,
+                defaults={
+                    "name": name,
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person('graduate')
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            BranchRoleConfig.objects.create(
+                role=role,
+                role_display=officer_role,
+                hierarchy_tier=1,
+                page=gc_member_page
+            )
+            if created: print(f"Created {name}")
 
     emails = []
     def make_email(self):
