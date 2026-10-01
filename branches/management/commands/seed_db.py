@@ -21,6 +21,23 @@ from branches.models import (
     class_choices
 )
 
+from forms_ext.models import (
+    ComplaintFormPage,
+    FormField
+)
+
+from records.models import (
+    RecordIndexPage
+)
+
+from rep_finder.models import (
+    RepsFormPage
+)
+
+from home.models import (
+    SiteSettings
+)
+
 from wagtail.models import Page
 
 db_classes = [
@@ -36,7 +53,10 @@ db_classes = [
     CommitteePage,
     CommitteeIndexPage,
     CommitteeMemberPlacement,
-    CommitteeRoleConfig
+    CommitteeRoleConfig,
+    RepsFormPage,
+    RecordIndexPage,
+    ComplaintFormPage
 ]
 
 from django.core.management.base import BaseCommand, CommandError
@@ -878,6 +898,37 @@ class Command(BaseCommand):
             )
             
             eboard_committee_page.add_child(instance=committee_page)
+
+        SiteSettings.objects.update(
+            box_archive_url="https://rpi.app.box.com/v/rpisg"
+        )
+
+        records_page = RecordIndexPage(
+            title="Record",
+            slug="the-record",
+            intro="The records of student government.",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=records_page)
+
+        complaint_form = ComplaintFormPage(
+            title="Complaint Form",
+            slug="complaint-form",
+            intro="Submit a complaint to the government.",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=complaint_form)
+        
+        reps_form = RepsFormPage(
+            title="Representative Finder",
+            slug="reps-form",
+            intro="Find your representatives!",
+            show_in_menus=True
+        )
+
+        root_page.add_child(instance=reps_form)
 
     emails = ["bitdib@rpi.edu", "hackea@rpi.edu"]
     def make_email(self):
