@@ -228,7 +228,7 @@ class Command(BaseCommand):
             
             name = f"Class of {class_num} Representative"
             role, created = Role.objects.update_or_create(
-                role_code=f"{class_num}-" '-'.join(name.lower().split(" ")),
+                role_code=f"{class_num}-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
                     "role_code": f"{class_num}-"+'-'.join(name.lower().split(" ")),
