@@ -231,7 +231,7 @@ class Command(BaseCommand):
                 role_code=f"{class_num}-" '-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": f"{class_num}-" '-'.join(name.lower().split(" ")),
+                    "role_code": f"{class_num}-"+'-'.join(name.lower().split(" ")),
                     "positions": 8,
                     "constituency": 'none',
                 }
