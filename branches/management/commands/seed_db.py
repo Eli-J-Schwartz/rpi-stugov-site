@@ -5,18 +5,14 @@ from branches.models import (
     Role, 
     MemberProfile, 
     MemberRoleAssignment, 
-    RoleConfig, 
+    RolePlacement, 
     MembershipDisplay, 
     BranchPage,
     MemberListingPage,
-    BranchRoleConfig,
     CommitteeIndexPage,
     CommitteePage,
-    CommitteeRoleConfig,
-    CommitteeMemberPlacement,
     ClassCouncilIndexPage,
     ClassCouncilPage,
-    ClassCouncilRoleConfig,
     FlexiblePage,
     class_choices
 )
@@ -47,13 +43,10 @@ db_classes = [
     BranchPage,
     ClassCouncilPage,
     ClassCouncilIndexPage,
-    ClassCouncilRoleConfig,
     MemberListingPage,
-    BranchRoleConfig,
     CommitteePage,
     CommitteeIndexPage,
-    CommitteeMemberPlacement,
-    CommitteeRoleConfig,
+    RolePlacement,
     RepsFormPage,
     RecordIndexPage,
     ComplaintFormPage
@@ -156,6 +149,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -166,10 +160,10 @@ class Command(BaseCommand):
             member=new_person,
             role=role
         )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="President",
-            hierarchy_tier=0,
+            display_name="President",
+            tier=0,
             page=uc_member_page
         )
 
@@ -178,6 +172,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -188,10 +183,10 @@ class Command(BaseCommand):
             member=new_person,
             role=role
         )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Vice President",
-            hierarchy_tier=1,
+            display_name="Vice President",
+            tier=1,
             page=uc_member_page
         )
 
@@ -201,6 +196,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -211,10 +207,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=f"{officer}",
-                hierarchy_tier=1,
+                display_name=f"{officer}",
+                tier=1,
                 page=uc_member_page
             )
 
@@ -235,6 +231,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 8,
                     "constituency": class_num,
                 }
@@ -248,10 +245,10 @@ class Command(BaseCommand):
                     role=role
                 )
 
-            ClassCouncilRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display="Class Representative",
-                hierarchy_tier=3,
+                display_name="Class Representative",
+                tier=3,
                 page=class_council_page
             )
             
@@ -260,6 +257,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 4,
                     "constituency": class_num,
                 }
@@ -274,16 +272,16 @@ class Command(BaseCommand):
                 )
                 senators_list.append(new_person)
                 
-            ClassCouncilRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display="Class Senator",
-                hierarchy_tier=3,
+                display_name="Class Senator",
+                tier=3,
                 page=class_council_page
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=f"Class of {class_num} Senator",
-                hierarchy_tier=3,
+                display_name=f"Class of {class_num} Senator",
+                tier=3,
                 page=senate_member_page
             )
             
@@ -292,6 +290,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -305,16 +304,16 @@ class Command(BaseCommand):
                     role=role
                 )
 
-            ClassCouncilRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display="Class Vice President",
-                hierarchy_tier=1,
+                display_name="Class Vice President",
+                tier=1,
                 page=class_council_page
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=f"Class of {class_num} Vice President",
-                hierarchy_tier=3,
+                display_name=f"Class of {class_num} Vice President",
+                tier=3,
                 page=uc_member_page
             )
             
@@ -323,6 +322,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -336,16 +336,16 @@ class Command(BaseCommand):
                     role=role
                 )
 
-            ClassCouncilRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display="Class President",
-                hierarchy_tier=0,
+                display_name="Class President",
+                tier=0,
                 page=class_council_page
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=f"Class of {class_num} President",
-                hierarchy_tier=3,
+                display_name=f"Class of {class_num} President",
+                tier=3,
                 page=uc_member_page
             )
 
@@ -355,6 +355,7 @@ class Command(BaseCommand):
                     name=name,
                     defaults={
                         "name": name,
+                        "role_code": ''.join(name.lower().split()),
                         "positions": 1,
                         "constituency": 'none',
                     }
@@ -364,10 +365,10 @@ class Command(BaseCommand):
                     member=new_person,
                     role=role
                 )
-                ClassCouncilRoleConfig.objects.create(
+                RolePlacement.objects.create(
                     role=role,
-                    role_display=officer_role,
-                    hierarchy_tier=1,
+                    display_name=officer_role,
+                    tier=1,
                     page=class_council_page
                 )
                 if created: print(f"Created {name}")
@@ -402,6 +403,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 8,
                 "constituency": 'graduate',
             }
@@ -415,10 +417,10 @@ class Command(BaseCommand):
                 role=role
             )
 
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Graduate Representative",
-            hierarchy_tier=3,
+            display_name="Graduate Representative",
+            tier=3,
             page=gc_member_page
         )
         
@@ -427,6 +429,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 4,
                 "constituency": 'graduate',
             }
@@ -441,16 +444,16 @@ class Command(BaseCommand):
             )
             senators_list.append(new_person)
             
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Graduate Senator",
-            hierarchy_tier=3,
+            display_name="Graduate Senator",
+            tier=3,
             page=gc_member_page
         )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display=f"Graduate Senator",
-            hierarchy_tier=3,
+            display_name=f"Graduate Senator",
+            tier=3,
             page=senate_member_page
         )
         
@@ -459,6 +462,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -472,10 +476,10 @@ class Command(BaseCommand):
                 role=role
             )
 
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Graduate Vice President",
-            hierarchy_tier=1,
+            display_name="Graduate Vice President",
+            tier=1,
             page=gc_member_page
         )
         
@@ -484,6 +488,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -497,10 +502,10 @@ class Command(BaseCommand):
                 role=role
             )
 
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Graduate President",
-            hierarchy_tier=0,
+            display_name="Graduate President",
+            tier=0,
             page=gc_member_page
         )
 
@@ -510,6 +515,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -519,10 +525,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=officer_role,
-                hierarchy_tier=1,
+                display_name=officer_role,
+                tier=1,
                 page=gc_member_page
             )
             if created: print(f"Created {name}")
@@ -533,6 +539,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -542,10 +549,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=officer_role,
-                hierarchy_tier=1,
+                display_name=officer_role,
+                tier=1,
                 page=senate_member_page
             )
             if created: print(f"Created {name}")
@@ -555,24 +562,25 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
         )
         new_person = self.make_person(class_choices()[0][0])
-        MemberProfile.objects.filter(email=new_person.email).update(
+        MemberProfile.objects.filter(rcs_id=new_person.rcs_id).update(
             first_name = "Ben",
             last_name = "Bitdiddle",
-            email = "bitdib@rpi.edu"   
+            rcs_id = "bitdib"   
         )
         MemberRoleAssignment.objects.create(
             member=new_person,
             role=role
         )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="Grand Marshall",
-            hierarchy_tier=0,
+            display_name="Grand Marshall",
+            tier=0,
             page=senate_member_page
         )
         if created: print(f"Created {name}")
@@ -583,6 +591,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -592,10 +601,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=name,
-                hierarchy_tier=1,
+                display_name=name,
+                tier=1,
                 page=senate_member_page
             )
             if created: print(f"Created {name}")
@@ -605,6 +614,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 3,
                 "constituency": 'associated',
             }
@@ -616,10 +626,10 @@ class Command(BaseCommand):
                 role=role
             )
             senators_list.append(new_person)
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display=name,
-            hierarchy_tier=3,
+            display_name=name,
+            tier=3,
             page=senate_member_page
         )
         if created: print(f"Created {name}")
@@ -629,6 +639,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 3,
                 "constituency": 'independent',
             }
@@ -640,10 +651,10 @@ class Command(BaseCommand):
                 role=role
             )
             senators_list.append(new_person)
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display=name,
-            hierarchy_tier=3,
+            display_name=name,
+            tier=3,
             page=senate_member_page
         )
         if created: print(f"Created {name}")
@@ -655,6 +666,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -664,10 +676,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=name,
-                hierarchy_tier=2,
+                display_name=name,
+                tier=2,
                 page=senate_member_page
             )
             if created: print(f"Created {name}")
@@ -683,29 +695,12 @@ class Command(BaseCommand):
             
             senate_committee_page.add_child(instance=committee_page)
 
-            CommitteeRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display="Chair",
-                hierarchy_tier=0,
+                display_name="Chair",
+                tier=0,
                 page=committee_page
             )
-
-            random_senator = random.choice(senators_list)
-
-            CommitteeMemberPlacement.objects.create(
-                page=committee_page,
-                member=random_senator,
-                committee_role="Vice Chair"
-            )
-
-            for i in range(5):
-                random_senator = random.choice(senators_list)
-    
-                CommitteeMemberPlacement.objects.create(
-                    page=committee_page,
-                    member=random_senator,
-                    committee_role="Member"
-                )
 
         eboard_branch_page = BranchPage(
             branch_type="eboard",
@@ -738,6 +733,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -747,10 +743,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=officer_role,
-                hierarchy_tier=1,
+                display_name=officer_role,
+                tier=1,
                 page=eboard_member_page
             )
             if created: print(f"Created {name}")
@@ -760,24 +756,25 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 1,
                 "constituency": 'none',
             }
         )
         new_person = self.make_person(class_choices()[0][0])
-        MemberProfile.objects.filter(email=new_person.email).update(
+        MemberProfile.objects.filter(rcs_id=new_person.rcs_id).update(
             first_name = "Alyssa P.",
             last_name = "Hacker",
-            email = "hackea@rpi.edu"   
+            rcs_id = "hackea"   
         )
         MemberRoleAssignment.objects.create(
             member=new_person,
             role=role
         )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display="President of the Union",
-            hierarchy_tier=0,
+            display_name="President of the Union",
+            tier=0,
             page=eboard_member_page
         )
         if created: print(f"Created {name}")
@@ -788,6 +785,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -797,10 +795,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=name,
-                hierarchy_tier=1,
+                display_name=name,
+                tier=1,
                 page=eboard_member_page
             )
             if created: print(f"Created {name}")
@@ -810,6 +808,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 6,
                 "constituency": 'none',
             }
@@ -820,10 +819,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display=name,
-            hierarchy_tier=3,
+            display_name=name,
+            tier=3,
             page=eboard_member_page
         )
         if created: print(f"Created {name}")
@@ -833,6 +832,7 @@ class Command(BaseCommand):
             name=name,
             defaults={
                 "name": name,
+                "role_code": ''.join(name.lower().split()),
                 "positions": 4,
                 "constituency": 'none',
             }
@@ -843,10 +843,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-        BranchRoleConfig.objects.create(
+        RolePlacement.objects.create(
             role=role,
-            role_display=name,
-            hierarchy_tier=3,
+            display_name=name,
+            tier=3,
             page=eboard_member_page
         )
         if created: print(f"Created {name}")
@@ -858,6 +858,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "name": name,
+                    "role_code": ''.join(name.lower().split()),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -867,10 +868,10 @@ class Command(BaseCommand):
                 member=new_person,
                 role=role
             )
-            BranchRoleConfig.objects.create(
+            RolePlacement.objects.create(
                 role=role,
-                role_display=f"Class of {class_num} Representative",
-                hierarchy_tier=3,
+                display_name=f"Class of {class_num} Representative",
+                tier=3,
                 page=eboard_member_page
             )
             if created: print(f"Created {name}")
@@ -930,22 +931,22 @@ class Command(BaseCommand):
 
         root_page.add_child(instance=reps_form)
 
-    emails = ["bitdib@rpi.edu", "hackea@rpi.edu"]
-    def make_email(self):
+    ids = ["bitdib", "hackea"]
+    def make_id(self):
         while True:
-            email = ''.join([random.choice(string.ascii_lowercase) for _ in range(6)]) + str(random.randint(2,20)) + "@rpi.edu"
-            if email not in self.emails: 
-                self.emails.append(email)
-                return email
+            id = ''.join([random.choice(string.ascii_lowercase) for _ in range(6)]) + str(random.randint(2,20))
+            if id not in self.ids: 
+                self.ids.append(id)
+                return id
     
     def make_person(self, year):
-        email = self.make_email()
+        id = self.make_id()
         person, _ = MemberProfile.objects.update_or_create(
-            email=email,
+            rcs_id=id,
             defaults={
                 "first_name": ''.join([random.choice(string.ascii_lowercase) for _ in range(7)]).capitalize(),
                 "last_name": ''.join([random.choice(string.ascii_lowercase) for _ in range(10)]).capitalize(),
-                "email": email,
+                "rcs_id": id,
                 "class_year": year,
                 "major": ''.join([random.choice(string.ascii_uppercase) for _ in range(4)]),
                 "bio": ''.join([random.choice(string.ascii_lowercase+"                            .") for _ in range(100)])
