@@ -146,10 +146,10 @@ class Command(BaseCommand):
 
         name = f"Undergraduate President"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -169,10 +169,10 @@ class Command(BaseCommand):
 
         name = f"Undergraduate Vice President"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -191,12 +191,12 @@ class Command(BaseCommand):
         )
 
         for officer in ["Secretary", "Treasurer", "Publicity Director"]:
-            name = f"[UC] {officer}"
+            name = f"{officer}"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code="uc-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": "uc-"+'-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -226,14 +226,14 @@ class Command(BaseCommand):
     
             class_council_list_page.add_child(instance=class_council_page)
             
-            name = f"[{class_num}] Class of {class_num} Representative"
+            name = f"Class of {class_num} Representative"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code=f"{class_num}-" '-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": f"{class_num}-" '-'.join(name.lower().split(" ")),
                     "positions": 8,
-                    "constituency": class_num,
+                    "constituency": 'none',
                 }
             )
             if created: print(f"Created {name}")
@@ -254,10 +254,10 @@ class Command(BaseCommand):
             
             name = f"Class of {class_num} Senator"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 4,
                     "constituency": class_num,
                 }
@@ -287,10 +287,10 @@ class Command(BaseCommand):
             
             name = f"Class of {class_num} Vice President"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -319,12 +319,12 @@ class Command(BaseCommand):
             
             name = f"Class of {class_num} President"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 1,
-                    "constituency": 'none',
+                    "constituency": class_num,
                 }
             )
             if created: print(f"Created {name}")
@@ -350,12 +350,12 @@ class Command(BaseCommand):
             )
 
             for officer_role in ["Secretary", "Treasurer", "Publicity Director"]:
-                name = f"[{class_num}] {officer_role}"
+                name = f"{officer_role}"
                 role, created = Role.objects.update_or_create(
-                    name=name,
+                    role_code=f"{class_num}-"+'-'.join(name.lower().split(" ")),
                     defaults={
                         "name": name,
-                        "role_code": ''.join(name.lower().split()),
+                        "role_code": f"{class_num}-"+'-'.join(name.lower().split(" ")),
                         "positions": 1,
                         "constituency": 'none',
                     }
@@ -400,12 +400,12 @@ class Command(BaseCommand):
                         
         name = f"Graduate Representative"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 8,
-                "constituency": 'graduate',
+                "constituency": 'none',
             }
         )
         if created: print(f"Created {name}")
@@ -426,17 +426,17 @@ class Command(BaseCommand):
         
         name = f"Graduate Senator"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
-                "positions": 4,
+                "role_code": '-'.join(name.lower().split(" ")),
+                "positions": 7,
                 "constituency": 'graduate',
             }
         )
         if created: print(f"Created {name}")
 
-        for i in range(4):
+        for i in range(7):
             new_person = self.make_person('graduate')
             MemberRoleAssignment.objects.create(
                 member=new_person,
@@ -459,10 +459,10 @@ class Command(BaseCommand):
         
         name = f"Graduate Vice President"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -485,12 +485,12 @@ class Command(BaseCommand):
         
         name = f"Graduate President"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
-                "constituency": 'none',
+                "constituency": 'graduate',
             }
         )
         if created: print(f"Created {name}")
@@ -510,12 +510,12 @@ class Command(BaseCommand):
         )
 
         for officer_role in ["Secretary", "Treasurer", "Publicity Director"]:
-            name = f"[GC] {officer_role}"
+            name = f"{officer_role}"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code="gc-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": "gc-"+'-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -534,12 +534,12 @@ class Command(BaseCommand):
             if created: print(f"Created {name}")
 
         for officer_role in ["Secretary", "Treasurer", "Parlimenatarian"]:
-            name = f"[Senate] {officer_role}"
+            name = f"{officer_role}"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code="senate-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": "senate-"+'-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -559,10 +559,10 @@ class Command(BaseCommand):
 
         name = f"Grand Marshall"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -588,10 +588,10 @@ class Command(BaseCommand):
         for vgm in ["Internal", "External"]:
             name = f"Vice Grand Marshall for {vgm} Affairs"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -611,10 +611,10 @@ class Command(BaseCommand):
 
         name = f"FSL Senator"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 3,
                 "constituency": 'associated',
             }
@@ -636,10 +636,10 @@ class Command(BaseCommand):
 
         name = f"Independent Senator"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 3,
                 "constituency": 'independent',
             }
@@ -663,10 +663,10 @@ class Command(BaseCommand):
             committee_name = self.gen_committee()
             name = f"{committee_name} Chair"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -728,12 +728,12 @@ class Command(BaseCommand):
         eboard_branch_page.add_child(instance=eboard_member_page)
 
         for officer_role in ["Secretary", "Treasurer", "Parlimenatarian"]:
-            name = f"[E-Board] {officer_role}"
+            name = f"{officer_role}"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code="eboard-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": "eboard-"+'-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -753,10 +753,10 @@ class Command(BaseCommand):
 
         name = f"President of the Union"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 1,
                 "constituency": 'none',
             }
@@ -782,10 +782,10 @@ class Command(BaseCommand):
         for vp in ["Board Operations", "Club Relations", "Rules and Special Projects"]:
             name = f"Vice President for {vp}"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code='-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": '-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -805,10 +805,10 @@ class Command(BaseCommand):
 
         name = f"Club & Organization Representative"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 6,
                 "constituency": 'none',
             }
@@ -829,10 +829,10 @@ class Command(BaseCommand):
 
         name = f"Member-At-Large Representative"
         role, created = Role.objects.update_or_create(
-            name=name,
+            role_code='-'.join(name.lower().split(" ")),
             defaults={
                 "name": name,
-                "role_code": ''.join(name.lower().split()),
+                "role_code": '-'.join(name.lower().split(" ")),
                 "positions": 4,
                 "constituency": 'none',
             }
@@ -853,12 +853,12 @@ class Command(BaseCommand):
 
         for class_num, _ in class_choices():
             if class_num == "graduate": continue
-            name = f"[E-Board] Class of {class_num} Representative"
+            name = f"Class of {class_num} Representative"
             role, created = Role.objects.update_or_create(
-                name=name,
+                role_code="eboard-"+'-'.join(name.lower().split(" ")),
                 defaults={
                     "name": name,
-                    "role_code": ''.join(name.lower().split()),
+                    "role_code": "eboard-"+'-'.join(name.lower().split(" ")),
                     "positions": 1,
                     "constituency": 'none',
                 }
@@ -888,6 +888,28 @@ class Command(BaseCommand):
             
         for i in range(9):
             committee_name = self.gen_committee()
+            name = f"{committee_name} Chair"
+            role, created = Role.objects.update_or_create(
+                role_code='-'.join(name.lower().split(" ")),
+                defaults={
+                    "name": name,
+                    "role_code": '-'.join(name.lower().split(" ")),
+                    "positions": 1,
+                    "constituency": 'none',
+                }
+            )
+            new_person = self.make_person(class_choices()[0][0])
+            MemberRoleAssignment.objects.create(
+                member=new_person,
+                role=role
+            )
+            RolePlacement.objects.create(
+                role=role,
+                display_name=name,
+                tier=2,
+                page=eboard_member_page
+            )
+            if created: print(f"Created {name}")
 
             committee_page = CommitteePage(
                 title=committee_name,
@@ -899,6 +921,13 @@ class Command(BaseCommand):
             )
             
             eboard_committee_page.add_child(instance=committee_page)
+
+            RolePlacement.objects.create(
+                role=role,
+                display_name="Chair",
+                tier=0,
+                page=committee_page
+            )
 
         SiteSettings.objects.update(
             box_archive_url="https://rpi.app.box.com/v/rpisg"
@@ -924,7 +953,7 @@ class Command(BaseCommand):
         
         reps_form = RepsFormPage(
             title="Representative Finder",
-            slug="reps-form",
+            slug="find-reps",
             intro="Find your representatives!",
             show_in_menus=True
         )
