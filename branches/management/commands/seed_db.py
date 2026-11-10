@@ -102,7 +102,7 @@ class Command(BaseCommand):
         senate_branch_page.add_child(instance=senate_member_page)
 
         senate_committee_page = CommitteeIndexPage(
-            title="Senate Committeee List",
+            title="Senate Committee List",
             slug="senate_committee_list",
             intro="The committees of the Senate.",
             show_in_menus=True
@@ -727,7 +727,7 @@ class Command(BaseCommand):
 
         eboard_branch_page.add_child(instance=eboard_member_page)
 
-        for officer_role in ["Secretary", "Treasurer", "Parlimenatarian"]:
+        for officer_role in ["Secretary", "Parlimenatarian"]:
             name = f"{officer_role}"
             role, created = Role.objects.update_or_create(
                 role_code="eboard-"+'-'.join(name.lower().split(" ")),
@@ -878,7 +878,7 @@ class Command(BaseCommand):
 
 
         eboard_committee_page = CommitteeIndexPage(
-            title="E-Board Committeee List",
+            title="E-Board Committee List",
             slug="eboard_committee_list",
             intro="The committees of E-Board.",
             show_in_menus=True
